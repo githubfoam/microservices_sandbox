@@ -10,8 +10,34 @@ matrix:
   fast_finish: true
   include:
 
+    - name: "microservices kind w kubectl helm snapped  Python 3.7 on focal" 
+      dist: focal
+      arch: amd64
+      addons:
+        snaps:
+          - name: kubectl
+            confinement: classic # or devmode
+            channel: latest/stable # will be passed to --channel flag
+          - name: helm
+            confinement: classic # or devmode
+            channel: latest/stable # will be passed to --channel flag
+      language: python
+      python: 3.7
+      before_install:
+        - pip3 install virtualenv
+        - virtualenv -p $(which python3) ~venvpy3
+        - source ~venvpy3/bin/activate
+        - pip install -r requirements.txt
+      script:
+        - sudo make deploy-kind
+        - sudo kind create cluster --name tutorial-cluster
+        - sudo kubectl config use-context kind-tutorial-cluster
+        # - sudo make deploy-microservices
+        - sudo kind delete cluster --name tutorial-cluster
+      after_success:
+        - deactivate
 
-    - name: "microservices kind w snapped kubectl helm Python 3.7 on bionic" #OK
+    - name: "microservices kind w kubectl helm snapped  Python 3.7 on bionic"
       dist: bionic
       arch: amd64
       addons:
@@ -33,8 +59,93 @@ matrix:
         - sudo make deploy-kind
         - sudo kind create cluster --name tutorial-cluster
         - sudo kubectl config use-context kind-tutorial-cluster
-        - sudo make deploy-microservices
+        # - sudo make deploy-microservices
         - sudo kind delete cluster --name tutorial-cluster
       after_success:
         - deactivate
 
+    - name: "microservices  w minikube kubectl helm snapped on focal amd64"
+      dist: focal
+      arch: amd64
+      addons:
+          snaps:
+            - name: kubectl
+              confinement: classic # or devmode
+              channel: latest/stable # will be passed to --channel flag
+            - name: helm
+              confinement: classic # or devmode
+              channel: latest/stable # will be passed to --channel flag
+            - name: minikube
+              confinement: classic # or devmode
+              channel: latest/stable # will be passed to --channel flag                     
+      language: python
+      # python: 3.7
+      before_install:
+        - pip3 install virtualenv
+        - virtualenv -p $(which python3) ~venvpy3
+        - source ~venvpy3/bin/activate
+        - pip install -r requirements.txt
+      # script:
+        # - sudo make deploy-minikube-latest
+        # - sudo make deploy-microservices
+      after_success:
+        - deactivate
+
+    - name: "microservices minikube wo snaps on focal amd64"
+      dist: focal
+      arch: amd64
+      language: python
+      # python: 3.7
+      before_install:
+        - pip3 install virtualenv
+        - virtualenv -p $(which python3) ~venvpy3
+        - source ~venvpy3/bin/activate
+        - pip install -r requirements.txt
+      script:
+        - sudo make deploy-minikube-latest
+        # - sudo make deploy-microservices
+      after_success:
+        - deactivate
+
+    - name: "microservices  w minikube kubectl helm snapped on bionic amd64"
+      dist: bionic
+      arch: amd64
+      addons:
+          snaps:
+            - name: kubectl
+              confinement: classic # or devmode
+              channel: latest/stable # will be passed to --channel flag
+            - name: helm
+              confinement: classic # or devmode
+              channel: latest/stable # will be passed to --channel flag
+            - name: minikube
+              confinement: classic # or devmode
+              channel: latest/stable # will be passed to --channel flag                      
+      language: python
+      # python: 3.7
+      before_install:
+        - pip3 install virtualenv
+        - virtualenv -p $(which python3) ~venvpy3
+        - source ~venvpy3/bin/activate
+        - pip install -r requirements.txt
+      # script:
+      #   - sudo make deploy-minikube-latest
+        # - sudo make deploy-microservices
+      after_success:
+        - deactivate
+
+    - name: "microservices wo snaps on bionic amd64"
+      dist: bionic
+      arch: amd64
+      language: python
+      # python: 3.7
+      before_install:
+        - pip3 install virtualenv
+        - virtualenv -p $(which python3) ~venvpy3
+        - source ~venvpy3/bin/activate
+        - pip install -r requirements.txt
+      script:
+        - sudo make deploy-minikube-latest
+        # - sudo make deploy-microservices
+      after_success:
+        - deactivate

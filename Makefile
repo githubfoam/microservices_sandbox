@@ -1,6 +1,7 @@
 IMAGE := alpine/fio
 APP:="app/deploy-openesb.sh"
 
+#apps
 deploy-voting-app:
 	bash app/deploy-voting-app.sh
 	
@@ -24,9 +25,6 @@ deploy-openfaas:
 
 deploy-kubesec:
 	bash app/deploy-kubesec.sh
-
-deploy-kind:
-	bash deploy-kind.sh
 
 deploy-microservices:
 	bash app/deploy-microservices.sh
@@ -60,6 +58,16 @@ deploy-dashboard:
 
 deploy-dashboard-helm:
 	bash app/deploy-dashboard-helm.sh
+
+#platforms
+deploy-kind:
+	bash platform/deploy-kind.sh
+
+deploy-minikube-latest:
+	bash platform/deploy-minikube_latest.sh
+
+deploy-minikube:
+	bash platform/deploy-minikube.sh
 
 push-image:
 	docker push $(IMAGE)
